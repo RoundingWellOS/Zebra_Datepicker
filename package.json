@@ -6,7 +6,7 @@
     "email": "contact@stefangabos.ro"
   },
   "homepage": "http://www.stefangabos.ro/jquery/zebra-datepicker/",
-  "main": "public/javascript/zebra_datepicker.js",
+  "main": "public/javascript/zebra_datepicker_mod.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/stefangabos/Zebra_Datepicker.git"
