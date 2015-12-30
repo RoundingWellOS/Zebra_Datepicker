@@ -949,7 +949,7 @@
                         });
 
                         // create the actual calendar icon (show a disabled icon if the element is disabled)
-                        icon = $('<button type="button" class="Zebra_DatePicker_Icon' + ($element.attr('disabled') == 'disabled' ? ' Zebra_DatePicker_Icon_Disabled' : '') + '">Pick a date</button>');
+                        icon = $('<button type="button" class="Zebra_DatePicker_Icon' + ($element.attr('disabled') == 'disabled' ? ' Zebra_DatePicker_Icon_Disabled' : '') + '"><i class="font-icon-calendar iefix-icon"></i></button>');
 
                         // a reference to the icon, as a global property
                         plugin.icon = icon;
@@ -977,58 +977,7 @@
                     });
 
                     // if icon exists, inject it into the DOM, right after the parent element (and inside the wrapper)
-                    if (undefined !== icon) icon.insertAfter($element);
-
-                }
-
-                // if calendar icon exists
-                if (undefined !== icon) {
-
-                    // needed when updating: remove any inline style set previously by library,
-                    // so we get the right values below
-                    icon.attr('style', '');
-
-                    // if calendar icon is to be placed *inside* the element
-                    // add an extra class to the icon
-                    if (plugin.settings.inside) icon.addClass('Zebra_DatePicker_Icon_Inside');
-
-                    var
-
-                        // get element' width and height (including margins)
-                        element_width = $element.outerWidth(),
-                        element_height = $element.outerHeight(),
-                        element_margin_left = parseInt($element.css('marginLeft'), 10) || 0,
-                        element_margin_top = parseInt($element.css('marginTop'), 10) || 0,
-
-                        // get icon's width, height and margins
-                        icon_width = icon.outerWidth(),
-                        icon_height = icon.outerHeight(),
-                        icon_margin_left = parseInt(icon.css('marginLeft'), 10) || 0,
-                        icon_margin_right = parseInt(icon.css('marginRight'), 10) || 0;
-
-                    // if icon is to be placed *inside* the element
-                    // position the icon accordingly
-                    if (plugin.settings.inside)
-
-                        icon.css({
-                            'top':  element_margin_top + ((element_height - icon_height) / 2),
-                            'left': element_margin_left + (element_width - icon_width - icon_margin_right)
-                        });
-
-                    // if icon is to be placed to the right of the element
-                    // position the icon accordingly
-                    else
-
-                        icon.css({
-                            'top':  element_margin_top + ((element_height - icon_height) / 2),
-                            'left': element_margin_left + element_width + icon_margin_left
-                        });
-
-                    // assume the datepicker is not disabled
-                    icon.removeClass(' Zebra_DatePicker_Icon_Disabled');
-
-                    // if element the datepicker is attached to became disabled, disable the calendar icon, too
-                    if ($element.attr('disabled') == 'disabled') icon.addClass('Zebra_DatePicker_Icon_Disabled');
+                    // if (undefined !== icon) icon.insertAfter($element);
 
                 }
 
@@ -1036,7 +985,7 @@
 
             // if the "Today" button is to be shown and it makes sense to be shown
             // (the "days" view is available and "today" is not a disabled date)
-            show_select_today = (plugin.settings.show_select_today !== false && $.inArray('days', views) > -1 && !is_disabled(current_system_year, current_system_month, current_system_day) ? plugin.settings.show_select_today : false);
+            show_select_today = (plugin.settings.show_select_today && $.inArray('days', views) > -1 && !is_disabled(current_system_year, current_system_month, current_system_day) ? plugin.settings.show_select_today : false);
 
             // if we just needed to recompute the things above, return now
             if (update) return;
@@ -1072,9 +1021,9 @@
                 '<div class="Zebra_DatePicker">' +
                     '<table class="dp_header">' +
                         '<tr>' +
-                            '<td class="dp_previous">' + plugin.settings.header_navigation[0] + '</td>' +
-                            '<td class="dp_caption">&#032;</td>' +
-                            '<td class="dp_next">' + plugin.settings.header_navigation[1] + '</td>' +
+                            '<td class="dp_caption">&nbsp;</td>' +
+                            '<td class="dp_previous"><i class="font-icon-caret-left iefix-icon"></i></td>' +
+                            '<td class="dp_next"><i class="font-icon-caret-right iefix-icon"></i></td>' +
                         '</tr>' +
                     '</table>' +
                     '<table class="dp_daypicker"></table>' +
@@ -1479,12 +1428,14 @@
                         datepicker_width = datepicker.outerWidth(),
                         datepicker_height = datepicker.outerHeight(),
 
+                        // get element's width and height
+                        element_height = $(element).outerHeight(true),
+                        element_width = $(element).outerWidth(true),
+                        icon_width = icon.outerWidth(true),
+
                         // compute the date picker's default left and top
-                        // this will be computed relative to the icon's top-right corner (if the calendar icon exists), or
-                        // relative to the element's top-right corner otherwise, to which the offsets given at initialization
-                        // are added/subtracted
-                        left = (undefined !== icon ? icon.offset().left + icon.outerWidth(true) : $element.offset().left + $element.outerWidth(true)) + plugin.settings.offset[0],
-                        top = (undefined !== icon ? icon.offset().top : $element.offset().top) - datepicker_height + plugin.settings.offset[1],
+                        datepicker_left = (icon.offset().left - element_width - icon_width) + plugin.settings.offset[0],
+                        datepicker_top = (icon.offset().top + element_height) + plugin.settings.offset[1],
 
                         // get browser window's width and height
                         window_width = $(window).width(),
@@ -1494,20 +1445,16 @@
                         window_scroll_top = $(window).scrollTop(),
                         window_scroll_left = $(window).scrollLeft();
 
-                    if (plugin.settings.default_position == 'below')
-                        top = (undefined !== icon ? icon.offset().top : $element.offset().top) + plugin.settings.offset[1];
-
                     // if date picker is outside the viewport, adjust its position so that it is visible
-                    if (left + datepicker_width > window_scroll_left + window_width) left = window_scroll_left + window_width - datepicker_width;
-                    if (left < window_scroll_left) left = window_scroll_left;
-
-                    if (top + datepicker_height > window_scroll_top + window_height) top = window_scroll_top + window_height - datepicker_height;
-                    if (top < window_scroll_top) top = window_scroll_top;
+                    if (datepicker_left + datepicker_width > window_scroll_left + window_width) datepicker_left = window_scroll_left + window_width - datepicker_width;
+                    if (datepicker_left < window_scroll_left) datepicker_left = window_scroll_left;
+                    if (datepicker_top + datepicker_height > window_scroll_top + window_height) datepicker_top = window_scroll_top + window_height - datepicker_height;
+                    if (datepicker_top < window_scroll_top) datepicker_top = window_scroll_top;
 
                     // make the date picker visible
                     datepicker.css({
-                        'left': left,
-                        'top':  top
+                        'left':     datepicker_left,
+                        'top':      datepicker_top
                     });
 
                 // if date picker is to be injected into a custom container element
