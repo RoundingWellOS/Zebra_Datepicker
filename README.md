@@ -1,3 +1,5 @@
+**Note** We've hacked this for RoundingWell
+
 ##Zebra_Datepicker
 
 ####A super-lightweight, highly configurable, cross-browser date picker jQuery plugin
