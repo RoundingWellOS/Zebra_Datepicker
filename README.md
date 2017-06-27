@@ -1,14 +1,14 @@
-#DEPRECATED - DO NOT USE :tada:
+# DEPRECATED - DO NOT USE :tada:
 
 **Note** We've hacked this for RoundingWell
 
-##Zebra_Datepicker
+## Zebra_Datepicker
 
-####A super-lightweight, highly configurable, cross-browser date picker jQuery plugin
+#### A super-lightweight, highly configurable, cross-browser date picker jQuery plugin
 
 Zebra_Datepicker is a small, compact and highly configurable datepicker jQuery plugin, meant to enrich forms by adding the datepicker functionality to them. This jQuery plugin will automatically add a calendar icon to the indicated input fields which, when clicked, will open the attached datepicker. Users can easily jump between months and years due to the datepicker’s intuitive interface. The selected date will be entered in the input field using the date format of choice, configurable in the datepicker’s options.
 
-##Features
+## Features
 
  - it is small – it weights around 21KB minified offering the best ratio of features per used bytes
  - it’s compact – unlike other datepickers, this datepicker is one-file only
